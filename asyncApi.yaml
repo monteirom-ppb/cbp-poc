@@ -1,0 +1,102 @@
+asyncapi: '2.6.0'
+info:
+  title: Customer Bet Stream Processor
+  description: |
+    The Liability Customer Calculator allows you to calculate repeat bets and block the customer from doing repeated bets when he passes a certain threshold.
+  version: '1.0.0'
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+servers:
+  dev:
+    url: use1-betting-backbone01.dev.fndlsb.net:9092
+    protocol: Kafka
+    description: The aggregated streams for the dev environment
+  prd:
+    url: use1-betting-backbone01.prd.fndlsb.net:9092
+    protocol: Kafka
+    description: The aggregated streams for the prd environment
+channels:
+  customer_bet_stream:
+    publish:
+      summary: Inform about customer last bet
+      operationId: test
+      message:
+        $ref : '#/components/messages/CustomerBet'
+
+components:
+  messages:
+    CustomerBet:
+      name: Bet
+      title: Custmomer Bet
+      summary: Customer bet Inform about a new user registration in the system
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/customerBetPayload'
+  schemas:
+    customerBetPayload:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          exclusiveMinimum: 0
+          description: the account id of the customer
+        betId:
+          type: integer
+          exclusiveMinimum: 0
+          description: the bet id
+        betType:
+          $ref: '#/components/schemas/betType'
+        betCombinationID:
+          type: string
+          description: It's generated hash that represents a unique Id of all the legs that are part of this bet
+        betStatus:
+          $ref: '#/components/schemas/betStatus'
+        legs:
+          $ref: '#/components/schemas/legs'
+        potentialWinning:
+          type: number
+          exclusiveMinimum: 0
+          description: The potential winning of the bet
+
+    betStatus:
+      type: string
+      description: the status of the bet
+      enum:
+        - ACTIVE
+        - SUSPENDED
+        - CANCELED
+        - CASHED_OUT
+        - WAITING
+        - EXPIRED
+        - VOIDED
+        - SETTLED
+    betType:
+      type: string
+      description: the type of bet
+      enum:
+        - Parlay
+        - Round Robin
+    legs:
+      type: array
+      minimum: 2
+      maximum: 25
+      properties:
+        selectionInfo:
+          $ref: '#/components/schemas/entity'
+        marketInfo:
+          $ref: '#/components/schemas/entity'
+        sportInfo:
+          $ref: '#/components/schemas/entity'
+        competitionInfo:
+          $ref: '#/components/schemas/entity'
+    entity:
+      type: object
+      properties:
+        name:
+          type: string
+          description: entity name
+        rampId:
+          type: integer
+          description: entity ramp id
+          exclusiveMinimum: 0
