@@ -45,10 +45,15 @@ components:
           type: integer
           exclusiveMinimum: 0
           description: the bet id
+        placeDate:
+          type: integer
+          format: datetime
+          description: the date/time when the bet was placed
         betType:
           $ref: '#/components/schemas/betType'
         betCombinationID:
           type: string
+          format: uuid
           description: It's generated hash that represents a unique Id of all the legs that are part of this bet
         betStatus:
           $ref: '#/components/schemas/betStatus'
@@ -56,6 +61,7 @@ components:
           $ref: '#/components/schemas/legs'
         potentialWinning:
           type: number
+          format: double
           exclusiveMinimum: 0
           description: The potential winning of the bet
 
