@@ -24,15 +24,25 @@ channels:
       message:
         $ref : '#/components/messages/CustomerBet'
 
+
 components:
   messages:
     CustomerBet:
       name: Bet
-      title: Custmomer Bet
+      title: Customer Bet
       summary: Customer bet Inform about a new user registration in the system
       contentType: protobuf
+      headers:
+        type: object
+        properties:
+          productId:
+            description: The productID in which the bet was placed
+            type: integer
+            exclusiveMinimum: 0
       payload:
         $ref: '#/components/schemas/customerBetPayload'
+
+
   schemas:
     customerBetPayload:
       type: object
