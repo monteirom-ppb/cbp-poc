@@ -19,80 +19,102 @@ servers:
 channels:
   customer_bet_stream:
     publish:
-      summary: Inform about customer last bet
-      operationId: test
+      summary: Publish's commands about the customer paraly liability.
+      operationId: accountId
       message:
-        $ref : '#/components/messages/CustomerBet'
-
+        oneOf:
+          - $ref : '#/components/messages/AddCustomerParlayLiability'
+          - $ref : '#/components/messages/CancelCustomerParlayLiability'
+          - $ref : '#/components/messages/EvictCustomerParlayLiability' 
 
 components:
   messages:
-    CustomerBet:
-      name: Bet
-      title: Customer Bet
-      summary: Customer bet Inform about a new user registration in the system
+    AddCustomerParlayLiability:
+      name: AddCustomerParlayLiability
+      title: Add customer parlay liability
+      summary: Informs to add this parlay liability for this customer.
       contentType: protobuf
-      headers:
-        type: object
-        properties:
-          productId:
-            description: The productID in which the bet was placed
-            type: integer
-            exclusiveMinimum: 0
       payload:
-        $ref: '#/components/schemas/customerBetPayload'
+        $ref: '#/components/schemas/CustomerParlayLiability'
 
+    CancelCustomerParlayLiability:
+      name: CancelCustomerParlayLiability
+      title: Cancel customer parlay liability
+      summary: Infomrs that the parlay liability for this customer no longer applies.
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/CustomerParlayLiability'
+      
+    EvictCustomerParlayLiability:
+      name: EvictCustomerParlayLiability
+      title: Evict customer parlay liability
+      summary: Informs to evict the following parlay for this customer because it no longer exists
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/EvictCustomerParlayLiabilityPayload'
 
   schemas:
-    customerBetPayload:
+    CustomerParlayLiability:
       type: object
       properties:
         accountId:
           type: integer
           exclusiveMinimum: 0
           description: the account id of the customer
-        betId:
-          type: integer
-          exclusiveMinimum: 0
-          description: the bet id
-        placeDate:
-          type: integer
-          format: datetime
-          description: the date/time when the bet was placed
-        betType:
-          $ref: '#/components/schemas/betType'
-        betCombinationID:
-          type: string
-          format: uuid
-          description: It's generated hash that represents a unique Id of all the legs that are part of this bet
-        betStatus:
-          $ref: '#/components/schemas/betStatus'
-        legs:
-          $ref: '#/components/schemas/legs'
-        potentialWinning:
-          type: number
-          format: double
-          exclusiveMinimum: 0
-          description: The potential winning of the bet
+        parlay:
+          $ref: '#/components/schemas/parlay' 
 
-    betStatus:
+    EvictCustomerParlayLiabilityPayload:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          exclusiveMinimum: 0
+          description: the account id of the customer
+        parlay:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/parlayId'
+            betId:
+              type: integer
+              exclusiveMinimum: 0
+              description: the bet id
+            productId:
+              type: integer
+              exclusiveMinimum: 0
+              description: the betting-state in which the bet was made.
+
+    parlay:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/parlayId'
+        betId:
+            type: integer
+            exclusiveMinimum: 0
+            description: the bet id
+        productId:
+          type: integer
+          exclusiveMinimum: 0
+          description: the betting-state in which the bet was made.
+        placeDate:
+            type: integer
+            format: datetime
+            description: the date/time when the bet was placed
+        legs:
+            $ref: '#/components/schemas/legs'
+        potentialWinning:
+            type: number
+            format: double
+            exclusiveMinimum: 0
+            description: The potential winning of the bet
+
+    parlayId:
       type: string
-      description: the status of the bet
-      enum:
-        - ACTIVE
-        - SUSPENDED
-        - CANCELED
-        - CASHED_OUT
-        - WAITING
-        - EXPIRED
-        - VOIDED
-        - SETTLED
-    betType:
-      type: string
-      description: the type of bet
-      enum:
-        - Parlay
-        - Round Robin
+      format: uuid
+      description: It's generated hash that represents a unique Id of all the legs that are part of this bet
+
     legs:
       type: array
       minimum: 2
