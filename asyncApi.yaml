@@ -24,8 +24,8 @@ channels:
       message:
         oneOf:
           - $ref : '#/components/messages/AddCustomerParlayLiability'
-          - $ref : '#/components/messages/CancelCustomerParlayLiability'
-          - $ref : '#/components/messages/EvictCustomerParlayLiability' 
+          - $ref : '#/components/messages/RemoveCustomerParlayLiability'
+          # - $ref : '#/components/messages/EvictCustomerParlayLiability' 
 
 components:
   messages:
@@ -37,21 +37,21 @@ components:
       payload:
         $ref: '#/components/schemas/CustomerParlayLiability'
 
-    CancelCustomerParlayLiability:
-      name: CancelCustomerParlayLiability
-      title: Cancel customer parlay liability
+    RemoveCustomerParlayLiability:
+      name: RemoveCustomerParlayLiability
+      title: Remove customer parlay liability
       summary: Infomrs that the parlay liability for this customer no longer applies.
       contentType: protobuf
       payload:
         $ref: '#/components/schemas/CustomerParlayLiability'
       
-    EvictCustomerParlayLiability:
-      name: EvictCustomerParlayLiability
-      title: Evict customer parlay liability
-      summary: Informs to evict the following parlay for this customer because it no longer exists
-      contentType: protobuf
-      payload:
-        $ref: '#/components/schemas/EvictCustomerParlayLiabilityPayload'
+    # EvictCustomerParlayLiability:
+    #   name: EvictCustomerParlayLiability
+    #   title: Evict customer parlay liability
+    #   summary: Informs to evict the following parlay for this customer because it no longer exists
+    #   contentType: protobuf
+    #   payload:
+    #     $ref: '#/components/schemas/EvictCustomerParlayLiabilityPayload'
 
   schemas:
     CustomerParlayLiability:
@@ -64,26 +64,26 @@ components:
         parlay:
           $ref: '#/components/schemas/parlay' 
 
-    EvictCustomerParlayLiabilityPayload:
-      type: object
-      properties:
-        accountId:
-          type: integer
-          exclusiveMinimum: 0
-          description: the account id of the customer
-        parlay:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/parlayId'
-            betId:
-              type: integer
-              exclusiveMinimum: 0
-              description: the bet id
-            productId:
-              type: integer
-              exclusiveMinimum: 0
-              description: the betting-state in which the bet was made.
+    # EvictCustomerParlayLiabilityPayload:
+    #   type: object
+    #   properties:
+    #     accountId:
+    #       type: integer
+    #       exclusiveMinimum: 0
+    #       description: the account id of the customer
+    #     parlay:
+    #       type: object
+    #       properties:
+    #         id:
+    #           $ref: '#/components/schemas/parlayId'
+    #         betId:
+    #           type: integer
+    #           exclusiveMinimum: 0
+    #           description: the bet id
+    #         productId:
+    #           type: integer
+    #           exclusiveMinimum: 0
+    #           description: the betting-state in which the bet was made.
 
     parlay:
       type: object
