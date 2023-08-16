@@ -37,10 +37,8 @@ public class BenchmarkRunner {
      * This will take the minHash signature generated before and produce an array with locations.
      * Example for size 3
      * - object A1 has min hash signature [20423, 30222, 48000, 19229, 91923, 88123] - lsh can generatee [-2, 3, 6]
-     * - note 1 - LSH location size can be != from minhash signature size. Once again, bigger min hash signature
+     * - note - LSH location size can be != from minhash signature size. Once again, bigger min hash signature
      * will lead to different locations for similar objects
-     * - note 2 - objects that are found in the exact same locations will have similarity 1. If 2/3 locations match
-     * objects will have similarity 2/3 and so on...
      */
     static int lshLocationsSize = 3;
 
