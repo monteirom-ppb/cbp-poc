@@ -80,6 +80,39 @@ public class BenchmarkRunner {
         org.openjdk.jmh.Main.main(args);
     }
 
+    @Benchmark
+    @Fork(value = 3, warmups = 1)
+    @BenchmarkMode(Mode.AverageTime)
+    public void testTimeHashBets(BetState s) {
+        s.randomBets.forEach(Objects::hash);
+    }
+
+    @Benchmark
+    @Fork(value = 3, warmups = 1)
+    @BenchmarkMode(Mode.AverageTime)
+    public void testTimeMinHashBets(BetState s) {
+        s.randomBets.forEach(bet -> {
+            int[] signature = minHash.signature(new HashSet<>(bet.getLegsHashCodes()));
+            int[] locations = lsh.hashSignature(signature);
+        });
+    }
+
+    @Benchmark
+    @Fork(value = 3, warmups = 1)
+    @BenchmarkMode(Mode.AverageTime)
+    public void testTimeHash1Bet(BetState s) {
+        Bet randomBet = s.randomBets.get(0);
+        int hash = Objects.hash(randomBet);
+    }
+
+    @Benchmark
+    @Fork(value = 3, warmups = 1)
+    @BenchmarkMode(Mode.AverageTime)
+    public void testTimeMinHash1Bet(BetState s) {
+        Bet randomBet = s.randomBets.get(0);
+        int[] signature = minHash.signature(new HashSet<>(randomBet.getLegsHashCodes()));
+        int[] locations = lsh.hashSignature(signature);
+    }
 
     @Benchmark
     @Fork(value = 3, warmups = 1)
