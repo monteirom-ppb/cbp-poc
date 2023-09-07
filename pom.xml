@@ -48,6 +48,11 @@
             <artifactId>reactor-kafka</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.confluent.parallelconsumer</groupId>
+            <artifactId>parallel-consumer-reactor</artifactId>
+            <version>0.5.2.6</version>
+        </dependency>
+        <dependency>
             <groupId>com.ppb.platform.sb</groupId>
             <artifactId>fbp-message-definition</artifactId>
         </dependency>
