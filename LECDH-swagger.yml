@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: Liability Engine Customer Data Handler
+  description: |-
+    The Liability Engine Customer Data Handler (LECDH) exposes a HTTP REST API to control the default customer stake factor to be used on the liability flow.
+
+
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: sports.area51@fanduel.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+tags:
+  - name: customer stake factor
+    description: Everything about the customer stake factor
+paths:
+  /customer/stakeFactor:
+    put:
+      tags:
+        - user
+      summary: Updates the customer default stake factor that will be applied to every customer that doesn't have stake factor defined.
+      operationId: updateCustomerDefaultStakeFactor 
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '204':
+          description: The customer default stake factor was updated successfully.
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        stakeFactor:
+          type: number
+          format: float
+          example: 1.1
+    

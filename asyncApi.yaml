@@ -25,6 +25,7 @@ channels:
         oneOf:
           - $ref : '#/components/messages/AddCustomerParlayLiability'
           - $ref : '#/components/messages/RemoveCustomerParlayLiability'
+          - $ref : '#/components/messages/UpdateCustomerDefaultStakeFactor'
           # - $ref : '#/components/messages/EvictCustomerParlayLiability' 
 
 components:
@@ -44,6 +45,13 @@ components:
       contentType: protobuf
       payload:
         $ref: '#/components/schemas/CustomerParlayLiability'
+
+    UpdateCustomerDefaultStakeFactor:
+      name: UpdateCustomerDefaultStakeFactor
+      title: Update default customer stake factor
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/CustomerStakeFactor'
       
     # EvictCustomerParlayLiability:
     #   name: EvictCustomerParlayLiability
@@ -138,3 +146,11 @@ components:
           type: integer
           description: entity ramp id
           exclusiveMinimum: 0
+    CustomerStakeFactor:
+      type: object
+      properties:
+        stakeFactor:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+          description: the default threshold of the customer
