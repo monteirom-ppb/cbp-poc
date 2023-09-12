@@ -26,6 +26,7 @@ channels:
           - $ref : '#/components/messages/AddCustomerParlayLiability'
           - $ref : '#/components/messages/RemoveCustomerParlayLiability'
           - $ref : '#/components/messages/UpdateCustomerDefaultStakeFactor'
+          - $ref : '#/components/messages/UpdateCustomerStakeFactor'
           # - $ref : '#/components/messages/EvictCustomerParlayLiability' 
 
 components:
@@ -51,7 +52,15 @@ components:
       title: Update default customer stake factor
       contentType: protobuf
       payload:
-        $ref: '#/components/schemas/CustomerStakeFactor'
+        $ref: '#/components/schemas/defaultCustomerStakeFactor'
+
+    UpdateCustomerStakeFactor:
+      name: UpdateCustomerStakeFactor
+      title: updates the customer stake factor for given betting state
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/UpdateCustomerStakeFactor'
+
       
     # EvictCustomerParlayLiability:
     #   name: EvictCustomerParlayLiability
@@ -93,6 +102,30 @@ components:
     #           exclusiveMinimum: 0
     #           description: the betting-state in which the bet was made.
 
+    defaultCustomerStakeFactor:
+      type: object
+      properties:
+        stakeFactor:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+          description: the default threshold of the customer
+
+    UpdateCustomerStakeFactor:
+      type: object
+      properties:
+        accountId:
+          $ref: '#/components/schemas/accountId'
+        productId:
+          type: integer
+          exclusiveMinimum: 0
+          description: the betting-state in which the stake factor should be updated.
+        stakeFactor:
+          type: number
+          format: double
+          exclusiveMinimum: 0
+          description: the client stake factor    
+    
     parlay:
       type: object
       properties:
@@ -136,6 +169,7 @@ components:
           $ref: '#/components/schemas/entity'
         competitionInfo:
           $ref: '#/components/schemas/entity'
+
     entity:
       type: object
       properties:
@@ -146,11 +180,11 @@ components:
           type: integer
           description: entity ramp id
           exclusiveMinimum: 0
-    CustomerStakeFactor:
-      type: object
-      properties:
-        stakeFactor:
-          type: number
-          format: double
-          exclusiveMinimum: 0
-          description: the default threshold of the customer
+
+    accountId:
+      type: integer
+      exclusiveMinimum: 0
+      description: The account id of the customer      
+
+      
+        
