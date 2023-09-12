@@ -44,7 +44,6 @@ public class BetProducer {
         }
         Flux<SenderRecord<Integer, String, Integer>> senderRecordFlux = Flux.fromIterable(list);
         sender.send(senderRecordFlux).subscribe();
-        System.out.println("DONE!");
     }
 
     public static List<Bet> generateRandomBets() {

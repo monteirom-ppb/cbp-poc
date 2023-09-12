@@ -21,18 +21,28 @@ public class KafkaParallelReactor {
 
     static CountDownLatch cl = new CountDownLatch(10000);
 
+    /**
+     * In order to run this performance test, go through these steps first:
+     * For kafka and zookeper:
+     * -> docker compose up -d
+     * -> Inside Kafka container, run command to create topic (Modify number of partitions to check Reactor performance
+     * with different number of consumers)
+     * Run main method on BetProducer to generate some random bets to the topic
+     * Run this main method either with parallel kafka or kafka reactor consumers
+     */
 
     public static void main(String[] args) {
-        kafkaReactor();
-        kafkaReactor();
-        kafkaReactor();
+        parallelKafka();
+        //kafkaReactor();
+        //kafkaReactor();
+        //kafkaReactor();
     }
 
     public static void parallelKafka() {
         final Logger logger = LoggerFactory.getLogger(KafkaParallelReactor.class);
         Map<String, Object> consumerProps = new HashMap<String, Object>();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "testing_liability_consumer111");
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "testing_liability_consumer_parallel");
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, IntegerDeserializer.class);
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -73,7 +83,7 @@ public class KafkaParallelReactor {
         final Logger logger = LoggerFactory.getLogger(KafkaParallelReactor.class);
         Map<String, Object> consumerProps = new HashMap<String, Object>();
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "testing_liability_consumer01");
+        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "testing_liability_consumer_reactor");
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, IntegerDeserializer.class);
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -83,11 +93,11 @@ public class KafkaParallelReactor {
                 ReceiverOptions.<Integer, String>create(consumerProps)
                         .subscription(Collections.singleton("bets_test"));
 
-        Flux<ReceiverRecord<Integer, String>> inboundBets = KafkaReceiver.create(receiverOption).receive();
+        Flux<ReceiverRecord<Integer, String>> kafkaReceiver = KafkaReceiver.create(receiverOption).receive();
 
         long started = System.currentTimeMillis();
 
-        inboundBets.subscribe(record -> {
+        kafkaReceiver.subscribe(record -> {
             String bet = record.value();
             logger.info("Consumed bet with ID {} and bet {} latch is {}", record.key(), bet, cl.getCount());
             try {
