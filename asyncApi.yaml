@@ -61,46 +61,14 @@ components:
       payload:
         $ref: '#/components/schemas/UpdateCustomerStakeFactor'
 
-      
-    # EvictCustomerParlayLiability:
-    #   name: EvictCustomerParlayLiability
-    #   title: Evict customer parlay liability
-    #   summary: Informs to evict the following parlay for this customer because it no longer exists
-    #   contentType: protobuf
-    #   payload:
-    #     $ref: '#/components/schemas/EvictCustomerParlayLiabilityPayload'
-
   schemas:
     CustomerParlayLiability:
       type: object
       properties:
         accountId:
-          type: integer
-          exclusiveMinimum: 0
-          description: the account id of the customer
+          $ref: '#/components/schemas/accountId'
         parlay:
           $ref: '#/components/schemas/parlay' 
-
-    # EvictCustomerParlayLiabilityPayload:
-    #   type: object
-    #   properties:
-    #     accountId:
-    #       type: integer
-    #       exclusiveMinimum: 0
-    #       description: the account id of the customer
-    #     parlay:
-    #       type: object
-    #       properties:
-    #         id:
-    #           $ref: '#/components/schemas/parlayId'
-    #         betId:
-    #           type: integer
-    #           exclusiveMinimum: 0
-    #           description: the bet id
-    #         productId:
-    #           type: integer
-    #           exclusiveMinimum: 0
-    #           description: the betting-state in which the bet was made.
 
     defaultCustomerStakeFactor:
       type: object
@@ -116,10 +84,8 @@ components:
       properties:
         accountId:
           $ref: '#/components/schemas/accountId'
-        productId:
-          type: integer
-          exclusiveMinimum: 0
-          description: the betting-state in which the stake factor should be updated.
+        productIds:
+          $ref: '#/components/schemas/productIds'
         stakeFactor:
           type: number
           format: double
@@ -182,9 +148,18 @@ components:
           exclusiveMinimum: 0
 
     accountId:
-      type: integer
+      type: string
       exclusiveMinimum: 0
       description: The account id of the customer      
+
+    productIds:
+      type: array
+      minimum: 1
+      properties:
+        productId:
+          type: integer
+          exclusiveMinimum: 0
+          description: the betting-state in which the stake factor should be updated.
 
       
         
