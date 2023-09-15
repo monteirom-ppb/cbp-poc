@@ -27,7 +27,8 @@ channels:
           - $ref : '#/components/messages/RemoveCustomerParlayLiability'
           - $ref : '#/components/messages/UpdateCustomerDefaultStakeFactor'
           - $ref : '#/components/messages/UpdateCustomerStakeFactor'
-          # - $ref : '#/components/messages/EvictCustomerParlayLiability' 
+          - $ref : '#/components/messages/UpdateCustomerHierarchyThreshold'
+          
 
 components:
   messages:
@@ -42,7 +43,7 @@ components:
     RemoveCustomerParlayLiability:
       name: RemoveCustomerParlayLiability
       title: Remove customer parlay liability
-      summary: Infomrs that the parlay liability for this customer no longer applies.
+      summary: Informs that the parlay liability for this customer no longer applies.
       contentType: protobuf
       payload:
         $ref: '#/components/schemas/CustomerParlayLiability'
@@ -60,6 +61,15 @@ components:
       contentType: protobuf
       payload:
         $ref: '#/components/schemas/UpdateCustomerStakeFactor'
+    
+    UpdateCustomerHierarchyThreshold:
+      name: UpdateCustomerHierarchyThreshold
+      title: updates the customer hierarchy threshold
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/UpdateCustomerHierarchyThreshold'
+      
+
 
   schemas:
     CustomerParlayLiability:
@@ -91,6 +101,26 @@ components:
           format: double
           exclusiveMinimum: 0
           description: the client stake factor    
+      
+    UpdateCustomerHierarchyThreshold:
+      type: object
+      properties:
+        accountId:
+          $ref: '#/components/schemas/accountId'
+        hierarchyId:
+          type: integer
+          exclusiveMinimum: 0 
+          description: The Ramp ID of the hirarchy
+        hierarchyType: 
+          type: string
+          description: the type of hierarchy we want to apply the threshold
+          enum:
+            - SPORT
+            - COMPETITION
+        threshold:
+          type: integer
+          minimum: 0 
+          description: the threshold to be applied to the customer parlays by hierarchy type 
     
     parlay:
       type: object
