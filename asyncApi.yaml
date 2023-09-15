@@ -27,7 +27,9 @@ channels:
           - $ref : '#/components/messages/RemoveCustomerParlayLiability'
           - $ref : '#/components/messages/UpdateCustomerDefaultStakeFactor'
           - $ref : '#/components/messages/UpdateCustomerStakeFactor'
-          # - $ref : '#/components/messages/EvictCustomerParlayLiability' 
+          - $ref : '#/components/messages/UpdateCustomerHierarchyThreshold'
+          - $ref : '#/components/messages/RemoveCustomerHierarchyThreshold'
+          
 
 components:
   messages:
@@ -42,7 +44,7 @@ components:
     RemoveCustomerParlayLiability:
       name: RemoveCustomerParlayLiability
       title: Remove customer parlay liability
-      summary: Infomrs that the parlay liability for this customer no longer applies.
+      summary: Informs that the parlay liability for this customer no longer applies.
       contentType: protobuf
       payload:
         $ref: '#/components/schemas/CustomerParlayLiability'
@@ -60,6 +62,22 @@ components:
       contentType: protobuf
       payload:
         $ref: '#/components/schemas/UpdateCustomerStakeFactor'
+    
+    UpdateCustomerHierarchyThreshold:
+      name: UpdateCustomerHierarchyThreshold
+      title: updates the customer threshhold for given hierarchy (Sport or Competition)
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/UpdateCustomerHierarchyThreshold'
+    
+    RemoveCustomerHierarchyThreshold:
+      name: RemoveCustomerHierarchyThreshold
+      title: removes the customer threshold for given hierarchy (Sport or Competition)
+      contentType: protobuf
+      payload:
+        $ref: '#/components/schemas/RemoveCustomerHierarchyThreshold'
+      
+
 
   schemas:
     CustomerParlayLiability:
@@ -91,6 +109,31 @@ components:
           format: double
           exclusiveMinimum: 0
           description: the client stake factor    
+      
+    UpdateCustomerHierarchyThreshold:
+      type: object
+      properties:
+        accountId:
+          $ref: '#/components/schemas/accountId'
+        hierarchyId:
+          $ref: '#/components/schemas/hierarchyId'
+        hierarchyType: 
+          $ref: '#/components/schemas/hierarchyType'
+        threshold:
+          type: number
+          format: float
+          minimum: 0 
+          description: the threshold to be applied to the customer parlays by hierarchy type 
+
+    RemoveCustomerHierarchyThreshold:
+      type: object
+      properties:
+        accountId:
+          $ref: '#/components/schemas/accountId'
+        hierarchyId:
+          $ref: '#/components/schemas/hierarchyId'
+        hierarchyType: 
+          $ref: '#/components/schemas/hierarchyType'
     
     parlay:
       type: object
@@ -160,6 +203,19 @@ components:
           type: integer
           exclusiveMinimum: 0
           description: the betting-state in which the stake factor should be updated.
+
+    hierarchyId:
+      type: string
+      exclusiveMinimum: 0 
+      description: The Ramp ID of the hierarchy
+    hierarchyType: 
+      type: string
+      description: the type of hierarchy we want to apply the threshold
+      enum:
+        - SUBCLASS
+        - EVENTTYPE          
+
+    
 
       
         
