@@ -13,31 +13,111 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.11
 tags:
-  - name: customer stake factor
-    description: Everything about the customer stake factor
+  - name: Customer liability configurations
+    description: Everything about the customer liability configurations
 paths:
   /customer/stakeFactor:
     put:
       tags:
-        - user
+        - customer
       summary: Updates the customer default stake factor that will be applied to every customer that doesn't have stake factor defined.
       operationId: updateCustomerDefaultStakeFactor 
       requestBody:
-        description: Created user object
+        description: Created customer object
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: '#/components/schemas/DefaultCustomerStakeFactor'
       responses:
         '204':
           description: The customer default stake factor was updated successfully.
+  
+  /customer/{accountid}/hierarchyThrehold:
+    put:
+      tags:
+        - customer
+      summary: Add or updates the customer threshold 
+      description: Add or updates the customer threshold for given hierarchy (Subclass or EventType)
+      operationId: updateCustomerHierarchythreshold
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/AccountId'
+      requestBody: 
+        description: Add customer liability threshold
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerHierarchyThreshold'
+      responses:
+        '204':
+          description: updated the customer  hierarchy threshold successfully.
+    delete:
+      tags: 
+        - customer
+      summary: Deletes the customer hierarchy threshold
+      description: Deletes the customer hierarchy threshold for a given hierarchy (Subclass or Event)
+      operationId: deleteCustomerHierarchyThreshold
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/AccountId'      
+        - name: hierarchyType
+          in: query 
+          description: Hierarchy Type
+          required: true
+          schema:
+            $ref: '#/components/schemas/HierarchyType'
+        - name: hierarchyId
+          in: query 
+          description: Hierarchy Id
+          required: true
+          schema:
+            $ref: '#/components/schemas/HierarchyId'
+      responses:
+        '204':
+          description: Deleted the customer hierarchy threshold successfully.
+      
+
+
 components:
   schemas:
-    Customer:
+    DefaultCustomerStakeFactor:
       type: object
       properties:
         stakeFactor:
           type: number
           format: float
           example: 1.1
+    
+    CustomerHierarchyThreshold:
+      type: object
+      properties:    
+        hierarchyType:
+          $ref: '#/components/schemas/HierarchyType'
+        hierarchyId:
+          $ref: '#/components/schemas/HierarchyId'    
+        threshold:      
+          type: number
+          format: float
+          minimum: 0 
+          description: the threshold to be applied to the customer parlays by hierarchy type
+    
+    AccountId:
+      type: string
+      example: "123"
+
+    HierarchyId:
+      type: string
+      example: "17"
+
+    HierarchyType:
+      type: string
+      enum:
+        - SUBCLASS
+        - EVENT_TYPE        
     
