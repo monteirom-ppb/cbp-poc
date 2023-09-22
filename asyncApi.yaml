@@ -213,7 +213,7 @@ components:
       description: the type of hierarchy we want to apply the threshold
       enum:
         - SUBCLASS
-        - EVENTTYPE          
+        - EVENT_TYPE          
 
     
 
