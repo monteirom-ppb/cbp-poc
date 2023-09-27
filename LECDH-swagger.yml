@@ -32,12 +32,12 @@ paths:
         '204':
           description: The customer default stake factor was updated successfully.
   
-  /customer/{accountid}/hierarchyThrehold:
+  /customer/{accountid}/hierarchyThreshold:
     put:
       tags:
         - customer
-      summary: Add or updates the customer threshold 
-      description: Add or updates the customer threshold for given hierarchy (Subclass or EventType)
+      summary: Adds or updates the customer hierarchy threshold for given Subclass or EventType
+      description: Adds or updates the customer threshold for given hierarchy (Subclass or EventType)
       operationId: updateCustomerHierarchythreshold
       parameters:
         - name: accountId
@@ -57,7 +57,7 @@ paths:
     delete:
       tags: 
         - customer
-      summary: Deletes the customer hierarchy threshold
+      summary: Deletes the customer hierarchy threshold for given Subclass or EventType
       description: Deletes the customer hierarchy threshold for a given hierarchy (Subclass or Event)
       operationId: deleteCustomerHierarchyThreshold
       parameters:
