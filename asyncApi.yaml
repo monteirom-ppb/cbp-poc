@@ -200,7 +200,7 @@ components:
       minimum: 1
       properties:
         productId:
-          type: integer
+          type: string
           exclusiveMinimum: 0
           description: the betting-state in which the stake factor should be updated.
 
