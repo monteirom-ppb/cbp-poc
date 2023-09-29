@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Liability Engine Max Stake Calculator
+  description: |-
+    This service provides the HTTP API needed to interact with the liability flow, allowing us to check the maximum amount that can be placed on a specific bet for a given user.
+    
+    Upon receiving an HTTP request with the bet legs and accountId, SPRM should calculate the betId and query its database to determine whether the bet already exists. It will then either calculate the maximum stake if it finds the bet or return a "Not Found" error message  otherwise.
+
+  version: 1.0.0
+
+paths:
+  /LEMSC/max-stake:
+    post:
+      tags:
+        - LEMSC
+      summary: get max stake
+      description: get max stake for this bet and specified user
+      operationId: getMaxStake
+      requestBody:
+        description: Information needed for MSC to be able to get max stake for this user/bet
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaxStakeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully retrieved max stake
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaxStakeResponse'
+        '404':
+          description: Max stake for this combination was not found
+
+components:
+  schemas:
+    MaxStakeRequest:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: int64
+          example: 1
+        legs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Leg'
+        totalOdd:
+          type: number
+          format: float
+          example: 2.04
+
+
+    Leg:
+      type: object
+      properties:
+        selectionRampId:
+          type: integer
+          format: int64
+          example: 911
+        marketRampId:
+          type: integer
+          format: int64
+          example: 912
+
+
+    MaxStakeResponse:
+      type: object
+      properties:
+        max_stake:
+          type: number
+          format: double
+          example: 230.23
